@@ -50,7 +50,7 @@ def SwitchEdges(G):
     NtripleOld = NumberOfTriple(G)
     K = G.edges() 
     noe = G.number_of_edges() 
-    a1 = rn.randint(0,noe)       
+    a1 = rn.randint(0,noe)     #случайное целое число N, 0 ≤ N ≤ noe.  
     a2 = rn.randint(0,noe)
     A = K[a1][0]
     B = K[a1][1]
