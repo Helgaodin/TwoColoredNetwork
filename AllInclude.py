@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Nov  1 21:40:47 2017
-
-@author: дмитрий
-"""
-
-# -*- coding: utf-8 -*-
-"""
 Created on Fri Oct 13 23:10:06 2017
 @author: Olga
 """
@@ -16,7 +9,7 @@ import numpy as np
 import math
 import copy
 
-
+Err = 0
 t = 0
 N = 500
 p = 0.15
@@ -47,7 +40,7 @@ def NumberOfTriple(G):
     print("Ntrip = ", Ntriple, "Black = ", Ntripleb, "White = ", Ntriplew)
     return Ntriple
 
-def SwitchEdges(G, tm):
+def SwitchEdges(G, tm, Err):
     G_old = copy.deepcopy(G)
     NtripleOld = NumberOfTriple(G)
     K = G.edges() 
@@ -79,9 +72,10 @@ def SwitchEdges(G, tm):
                 print(NtripleOld)
                 return G_old, tm 
     except (nx.NetworkXError):
+        Err = Err + 1
         return G, tm
 while(t<Tmin):
-    print(t)
-    G, t = SwitchEdges(G, t) 
+    print(t, Err)
+    G, t = SwitchEdges(G, t, Err) 
 
-nx.draw_networkx(G, with_labels=True)   
+nx.draw_networkx(G, with_labels=True) 
