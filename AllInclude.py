@@ -11,11 +11,11 @@ import copy
 
 Err = 0
 t = 0
-N = 500
+N = 256
 p = 0.15
 c = 0.5
 mu = 0.5
-Tmin = 20000
+Tmin = 2000000000
 Nb = math.floor(c*N)#number of black 250
 G = nx.erdos_renyi_graph(N, p) 
 
@@ -77,5 +77,8 @@ def SwitchEdges(G, tm, Err):
 while(t<Tmin):
     print(t, Err)
     G, t = SwitchEdges(G, t, Err) 
-
-nx.draw_networkx(G, with_labels=True) 
+    if (t%500 == 0):
+        f = open('result.txt', 'a')
+        text = str(t) + '\t' + str(NumberOfTriple(G)) + '\n'
+        f.write(text)
+        f.close()
