@@ -18,7 +18,14 @@ mu = 0.5
 Tmin = 2000000000
 Nb = math.floor(c*N)#number of black 250
 G = nx.erdos_renyi_graph(N, p) 
+fileName = 'result'+str(mu)+'.txt'
 
+def NumberBW(G):
+    Adj = nx.to_numpy_matrix(G)#матрица смежности
+    upper_half = np.hsplit(np.vsplit(Adj, 2)[0], 2)
+    upper_right_bw = upper_half[1]#Nbw
+    Nbw = np.sum(upper_right_bw)
+    return Nbw
 
 def NumberOfTriple(G):
     Adj = nx.to_numpy_matrix(G)#матрица смежности
@@ -27,13 +34,11 @@ def NumberOfTriple(G):
     upper_left_b = upper_half[0]#black
     #upper_right = upper_half[1]
     #lower_left = lower_half[0]
-    lower_right_w = lower_half[1]#white
-    
+    lower_right_w = lower_half[1]#white   
     BB = np.dot(upper_left_b,upper_left_b)
     WW = np.dot(lower_right_w,lower_right_w)
-    
-    db=np.diagonal(BB) #black
-    dw=np.diagonal(WW)#white
+    db=np.diagonal(BB) #black diag elements
+    dw=np.diagonal(WW)#white diag elements
     Ntripleb = (np.sum(BB) - np.sum(db))/2.0
     Ntriplew = (np.sum(WW) - np.sum(dw))/2.0
     Ntriple = Ntripleb + Ntriplew
@@ -60,25 +65,29 @@ def SwitchEdges(G, tm, Err):
         if (NtripleNow > NtripleOld):
             print(NtripleNow)
             tm= tm+1
-            return G, tm
+            Nbw = NumberBW(G)
+            return G, tm, NtripleNow, Nbw
         else:
             deltaN = NtripleOld - NtripleNow
             print("dN = ", deltaN)
             if(rn.random() < math.exp(-mu*deltaN)):#accepted
-                print(NtripleNow)
+                #print(NtripleNow)
                 tm= tm+1
-                return G, tm
+                Nbw = NumberBW(G)
+                return G, tm, NtripleNow, Nbw
             else:
-                print(NtripleOld)
-                return G_old, tm 
+                #print(NtripleOld)
+                Nbw = NumberBW(G_old)
+                return G_old, tm, NtripleOld, Nbw 
     except (nx.NetworkXError):
         Err = Err + 1
-        return G, tm
+        Nbw = NumberBW(G)
+        return G, tm, 0, Nbw
 while(t<Tmin):
     print(t, Err)
-    G, t = SwitchEdges(G, t, Err) 
-    if (t%500 == 0):
-        f = open('result.txt', 'a')
-        text = str(t) + '\t' + str(NumberOfTriple(G)) + '\n'
+    G, t, Ntrip, Nbw = SwitchEdges(G, t, Err) 
+    if (t%2000 == 0):
+        f = open(fileName, 'a')
+        text = str(t) + '\t' + str(Ntrip) +'\t'+ str(Nbw) + '\n'
         f.write(text)
         f.close()
