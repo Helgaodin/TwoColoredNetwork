@@ -60,13 +60,19 @@ def SwitchEdges(G, tm, Err, Adj):
     K = G.edges() 
     noe = G.number_of_edges() 
     Edge = np.diagonal(Adj)
-    print('Edge = ', Edge)
-    a1 = rn.randint(0,noe-1)       
-    a2 = rn.randint(0,noe-1)#случайное ребро возьмеь верно
-    A = K[a1][0]
-    B = K[a1][1]
-    C = K[a2][0]
-    D = K[a2][1]#это просто числа
+    print('Edges = ', K)
+    QQ = nx.to_numpy_matrix(G)
+    q = np.diagonal(QQ)
+    print('DiagQQ = ', q)
+    while True:
+        a1 = rn.randint(0,noe-1)       
+        a2 = rn.randint(0,noe-1)#случайное ребро возьмеь верно
+        A = K[a1][0]
+        B = K[a1][1]
+        C = K[a2][0]
+        D = K[a2][1]#это просто числа
+        if ((A != C) and (B != D)):
+            break
     try:
         #print(A, B, C, D)
         Adj[A][B] = Adj[A][B]-1
