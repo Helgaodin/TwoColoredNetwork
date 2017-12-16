@@ -11,7 +11,7 @@ import copy
 
 Err = 0
 t = 0
-N = 8#256
+N = 256
 p = 0.15
 c = 0.5
 mu = 0.5
@@ -21,9 +21,8 @@ G = nx.erdos_renyi_graph(N, p)
 MatAdj = nx.to_numpy_matrix(G)#матрица смежности 256x256
 dura = np.asarray(MatAdj)
 MatAdj = copy.deepcopy(dura)
-#dura = MatAdj
-#print(dura[2])
 fileName = 'result'+str(mu)+'.txt'
+fileMatrixName = 'matrix'+str(mu)+'.txt'
 
 def NumberBW(Adj):
     #Adj = nx.to_numpy_matrix(G)#матрица смежности
@@ -59,11 +58,6 @@ def SwitchEdges(G, tm, Err, Adj):
     NtripleOld = NumberOfTriple(Adj)
     K = G.edges() 
     noe = G.number_of_edges() 
-    Edge = np.diagonal(Adj)
-    print('Edges = ', K)
-    QQ = nx.to_numpy_matrix(G)
-    q = np.diagonal(QQ)
-    print('DiagQQ = ', q)
     while True:
         a1 = rn.randint(0,noe-1)       
         a2 = rn.randint(0,noe-1)#случайное ребро возьмеь верно
@@ -123,11 +117,15 @@ while(t<Tmin):
     #print(t, Err)
     G, t, Ntrip, Nbw, MAdj = SwitchEdges(G, t, Err, MatAdj) 
     MatAdj = copy.deepcopy(MAdj)
-    Ned = np.sum(MatAdj)
-    print(Ned)
     if (t%2000 == 0):
         print(t)
         f = open(fileName, 'a')
         text = str(t) + '\t' + str(Ntrip) +'\t'+ str(Nbw) + '\n'
         f.write(text)
+        f.close()
+        f = open(fileMatrixName,'w')
+        for i in range (N):
+            for j in range (N):
+                f.write(str(MatAdj[i][j])+'\t')
+            f.write('\n')
         f.close()
