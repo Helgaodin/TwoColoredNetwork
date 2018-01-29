@@ -19,18 +19,19 @@ import copy
 
 Err = 0
 t = 0
-N = 256
-p = 0.15
+N = 10
+p = 0.4
 c = 0.5
 mu = 0.5
-Tmin = 2000000000
-Nb = math.floor(c*N)#number of black 250
+Tmin = 1000
+Nb = math.floor(c*N)#number of black 5
 G = nx.erdos_renyi_graph(N, p) 
-MatAdj = nx.to_numpy_matrix(G)#матрица смежности 256x256
+MatAdj = nx.to_numpy_matrix(G)#матрица смежности 10x10
 dura = np.asarray(MatAdj)
 MatAdj = copy.deepcopy(dura)
 fileName = 'result'+str(mu)+'.txt'
 fileMatrixName = 'matrix'+str(mu)+'.txt'
+fileFourTamm = '4colomns'+str(mu)+'.txt'
 
 def NumberBW(Adj):
     #Adj = nx.to_numpy_matrix(G)#матрица смежности
@@ -80,6 +81,7 @@ def SwitchEdges(G, tm, Err, Adj):
             break
     try:
         #print(A, B, C, D)
+        one = str(A)+'-'+str(B)+'; '+str(C)+'-'+str(D)+'; '+str(E)+'-'+str(F)+'\t'#что хотели переключить
         Adj[A][B] = Adj[A][B]-1
         Adj[B][A] = Adj[A][B]
         if(Adj[A][B] == 0):
@@ -106,25 +108,38 @@ def SwitchEdges(G, tm, Err, Adj):
         Adj[F][A] = Adj[A][F] 
         if(Adj[A][F] == 1):
             G.add_edge(A,F)
+        two = str(B)+'-'+str(C)+'; '+str(E)+'-'+str(D)+'; '+str(A)+'-'+str(F)+'\t'#как хотели переключить
         #G.add_edge(A,C)
         #G.add_edge(B,D)
         NtripleNow = NumberOfTriple(Adj)
+        three = str(NtripleNow - NtripleOld)+'\t'#изменения количества одноцветных триад 
+        tm= tm+1
         if (NtripleNow > NtripleOld):
             #print(NtripleNow)
-            tm= tm+1
             Nbw = NumberBW(Adj)
+            four = "YES"+'\n'
+            f = open(fileFourTamm, 'a')
+            f.write(one+two+three+four)
+            f.close()
             return G, tm, NtripleNow, Nbw, Adj
         else:
             deltaN = NtripleOld - NtripleNow
             #print("dN = ", deltaN)
             if(rn.random() < math.exp(-mu*deltaN)):#accepted
                 #print(NtripleNow)
-                tm= tm+1
                 Nbw = NumberBW(Adj)
+                four = "YES"+'\n'
+                f = open(fileFourTamm, 'a')
+                f.write(one+two+three+four)
+                f.close()                
                 return G, tm, NtripleNow, Nbw, Adj
             else:
                 #print(NtripleOld)
                 Nbw = Nbw_old#NumberBW(G_old)
+                four = "NO"+'\n'
+                f = open(fileFourTamm, 'a')
+                f.write(one+two+three+four)
+                f.close()
                 return G_old, tm, NtripleOld, Nbw, Adj_old 
     except (nx.NetworkXError):
         Err = Err + 1
