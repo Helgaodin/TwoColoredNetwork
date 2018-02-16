@@ -61,10 +61,20 @@ def SwitchEdges(G, tm, Err, Adj):
     while True:
         a1 = rn.randint(0,noe-1)       
         a2 = rn.randint(0,noe-1)#случайное ребро возьмеь верно
-        A = K[a1][0]
-        B = K[a1][1]
-        C = K[a2][0]
-        D = K[a2][1]#это просто числа
+        aRan1 = rn.random()
+        aRan2 = rn.random()
+        if (aRan1 < 0.5):
+            A = K[a1][0]
+            B = K[a1][1]
+        else:
+            A = K[a1][1]
+            B = K[a1][0]
+        if (aRan2 < 0.5):
+            C = K[a2][0]
+            D = K[a2][1]#это просто числа
+        else:
+            C = K[a2][1]
+            D = K[a2][0]#это просто числа
         if ((A != C) and (B != D)):
             break
     try:
