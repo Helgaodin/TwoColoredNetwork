@@ -100,9 +100,9 @@ def SwitchEdges(G, tm, Err, Adj):
         #G.add_edge(A,C)
         #G.add_edge(B,D)
         NtripleNow = NumberOfTriple(Adj)
+        tm= tm+1
         if (NtripleNow > NtripleOld):
             #print(NtripleNow)
-            tm= tm+1
             Nbw = NumberBW(Adj)
             return G, tm, NtripleNow, Nbw, Adj
         else:
@@ -110,7 +110,6 @@ def SwitchEdges(G, tm, Err, Adj):
             #print("dN = ", deltaN)
             if(rn.random() < math.exp(-mu*deltaN)):#accepted
                 #print(NtripleNow)
-                tm= tm+1
                 Nbw = NumberBW(Adj)
                 return G, tm, NtripleNow, Nbw, Adj
             else:
