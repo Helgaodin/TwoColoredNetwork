@@ -16,7 +16,7 @@ p = 0.15
 c = 0.5
 mu = 0.5
 Tmin = 2000000000
-Nb = math.floor(c*N)#number of black 250
+Nb = math.floor(c*N)#number of black 128
 G = nx.erdos_renyi_graph(N, p) 
 MatAdj = nx.to_numpy_matrix(G)#матрица смежности 256x256
 dura = np.asarray(MatAdj)
@@ -75,28 +75,24 @@ def SwitchEdges(G, tm, Err, Adj):
         else:
             C = K[a2][1]
             D = K[a2][0]#это просто числа
-        if ((A != C) and (B != D)):
+        if ((A != C) and (B != D)) and ((G.has_edge(A,C)==False) and (G.has_edge(B,D)==False)):
             break
     try:
         #print(A, B, C, D)
         Adj[A][B] = Adj[A][B]-1
         Adj[B][A] = Adj[A][B]
-        if(Adj[A][B] == 0):
-            G.remove_edge(A,B)
+        G.remove_edge(A,B)
         Adj[C][D] = Adj[C][D]-1
         Adj[D][C] = Adj[C][D]
-        if(Adj[C][D] == 0):
-            G.remove_edge(C,D)
+        G.remove_edge(C,D)
         #G.remove_edge(A,B)
         #G.remove_edge(C,D) 
         Adj[A][C] = Adj[A][C]+1
         Adj[C][A] = Adj[A][C]
-        if(Adj[A][C] == 1):
-            G.add_edge(A,C)
+        G.add_edge(A,C)
         Adj[B][D] = Adj[B][D]+1
         Adj[D][B] = Adj[B][D] 
-        if(Adj[B][D] == 1):
-            G.add_edge(B,D)
+        G.add_edge(B,D)
         #G.add_edge(A,C)
         #G.add_edge(B,D)
         NtripleNow = NumberOfTriple(Adj)
@@ -121,7 +117,6 @@ def SwitchEdges(G, tm, Err, Adj):
         Nbw = NumberBW(Adj)
         return G, tm, 0, Nbw, Adj
    
-#MatAdj[225][1] = MatAdj[1][255]-1
 while(t<Tmin):
     #print(t, Err)
     G, t, Ntrip, Nbw, MAdj = SwitchEdges(G, t, Err, MatAdj) 
