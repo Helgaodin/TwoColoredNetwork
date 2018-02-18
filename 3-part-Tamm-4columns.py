@@ -20,7 +20,7 @@ import copy
 Err = 0
 t = 0
 N = 10
-p = 0.4
+p = 0.15
 c = 0.5
 mu = 0.1
 Tmin = 1000
