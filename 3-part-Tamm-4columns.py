@@ -92,37 +92,31 @@ def SwitchEdges(G, tm, Err, Adj):
         else:
             E = K[a3][1]
             F = K[a3][0]
-        if ((B != C) and (E != D) and (F != A)):
+        if ((B != C) and (E != D) and (F != A)) and ((G.has_edge(B,C)==False) and (G.has_edge(E,D)==False) and (G.has_edge(A,F)==False)):
             break
     try:
         #print(A, B, C, D)
         one = str(A)+'-'+str(B)+'; '+str(C)+'-'+str(D)+'; '+str(E)+'-'+str(F)+'\t'#что хотели переключить
         Adj[A][B] = Adj[A][B]-1
         Adj[B][A] = Adj[A][B]
-        if(Adj[A][B] == 0):
-            G.remove_edge(A,B)
+        G.remove_edge(A,B)
         Adj[C][D] = Adj[C][D]-1
         Adj[D][C] = Adj[C][D]
-        if(Adj[C][D] == 0):
-            G.remove_edge(C,D)
+        G.remove_edge(C,D)
         Adj[E][F] = Adj[E][F]-1
         Adj[F][E] = Adj[E][F]
-        if(Adj[E][F] == 0):
-            G.remove_edge(E,F)
+        G.remove_edge(E,F)
         #G.remove_edge(A,B)
         #G.remove_edge(C,D) 
         Adj[B][C] = Adj[B][C]+1
         Adj[C][B] = Adj[B][C]
-        if(Adj[B][C] == 1):
-            G.add_edge(B,C)
+        G.add_edge(B,C)
         Adj[E][D] = Adj[E][D]+1
         Adj[D][E] = Adj[E][D] 
-        if(Adj[E][D] == 1):
-            G.add_edge(E,D)
+        G.add_edge(E,D)
         Adj[A][F] = Adj[A][F]+1
         Adj[F][A] = Adj[A][F] 
-        if(Adj[A][F] == 1):
-            G.add_edge(A,F)
+        G.add_edge(A,F)
         two = str(B)+'-'+str(C)+'; '+str(E)+'-'+str(D)+'; '+str(A)+'-'+str(F)+'\t'#как хотели переключить
         #G.add_edge(A,C)
         #G.add_edge(B,D)
