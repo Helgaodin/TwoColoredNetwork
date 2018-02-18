@@ -71,68 +71,68 @@ def SwitchEdges(G, tm, Err, Adj):
         a1 = rn.randint(0,noe-1)       
         a2 = rn.randint(0,noe-1)#случайное ребро возьмеь верно
         a3 = rn.randint(0,noe-1)#случайное ребро возьмеь верно
-        A = K[a1][0]
-        B = K[a1][1]
-        C = K[a2][0]
-        D = K[a2][1]#это просто числа
-        E = K[a3][0]
-        F = K[a3][1]
-        if ((B != C) and (E != D) and (F != A)):
+        aRan1 = rn.random()
+        aRan2 = rn.random()
+        aRan3 = rn.random()
+        if (aRan1 < 0.5):
+            A = K[a1][0]
+            B = K[a1][1]
+        else:
+            A = K[a1][1]
+            B = K[a1][0]
+        if (aRan2 < 0.5):
+            C = K[a2][0]
+            D = K[a2][1]#это просто числа
+        else:
+            C = K[a2][1]
+            D = K[a2][0]#это просто числа
+        if (aRan3 < 0.5):
+            E = K[a3][0]
+            F = K[a3][1]
+        else:
+            E = K[a3][1]
+            F = K[a3][0]
+        if ((B != C) and (E != D) and (F != A)) and ((G.has_edge(B,C)==False) and (G.has_edge(E,D)==False) and (G.has_edge(A,F)==False)):
             break
     try:
-        #print(A, B, C, D)
         Adj[A][B] = Adj[A][B]-1
         Adj[B][A] = Adj[A][B]
-        if(Adj[A][B] == 0):
-            G.remove_edge(A,B)
+        G.remove_edge(A,B)
         Adj[C][D] = Adj[C][D]-1
         Adj[D][C] = Adj[C][D]
-        if(Adj[C][D] == 0):
-            G.remove_edge(C,D)
+        G.remove_edge(C,D)
         Adj[E][F] = Adj[E][F]-1
         Adj[F][E] = Adj[E][F]
-        if(Adj[E][F] == 0):
-            G.remove_edge(E,F)
-        #G.remove_edge(A,B)
-        #G.remove_edge(C,D) 
+        G.remove_edge(E,F)
+        #####
         Adj[B][C] = Adj[B][C]+1
         Adj[C][B] = Adj[B][C]
-        if(Adj[B][C] == 1):
-            G.add_edge(B,C)
+        G.add_edge(B,C)
         Adj[E][D] = Adj[E][D]+1
         Adj[D][E] = Adj[E][D] 
-        if(Adj[E][D] == 1):
-            G.add_edge(E,D)
+        G.add_edge(E,D)
         Adj[A][F] = Adj[A][F]+1
         Adj[F][A] = Adj[A][F] 
-        if(Adj[A][F] == 1):
-            G.add_edge(A,F)
-        #G.add_edge(A,C)
-        #G.add_edge(B,D)
+        G.add_edge(A,F)
+        #####
         NtripleNow = NumberOfTriple(Adj)
+        tm= tm+1
         if (NtripleNow > NtripleOld):
-            #print(NtripleNow)
-            tm= tm+1
             Nbw = NumberBW(Adj)
             return G, tm, NtripleNow, Nbw, Adj
         else:
             deltaN = NtripleOld - NtripleNow
-            #print("dN = ", deltaN)
             if(rn.random() < math.exp(-mu*deltaN)):#accepted
-                #print(NtripleNow)
-                tm= tm+1
                 Nbw = NumberBW(Adj)
                 return G, tm, NtripleNow, Nbw, Adj
             else:
-                #print(NtripleOld)
                 Nbw = Nbw_old#NumberBW(G_old)
                 return G_old, tm, NtripleOld, Nbw, Adj_old 
     except (nx.NetworkXError):
         Err = Err + 1
         Nbw = NumberBW(Adj)
         return G, tm, 0, Nbw, Adj
-   
-#MatAdj[225][1] = MatAdj[1][255]-1
+    
 while(t<Tmin):
     #print(t, Err)
     G, t, Ntrip, Nbw, MAdj = SwitchEdges(G, t, Err, MatAdj) 
@@ -149,3 +149,11 @@ while(t<Tmin):
                 f.write(str(MatAdj[i][j])+'\t')
             f.write('\n')
         f.close()
+        if(t%1000000)
+            fileMil = 'mu'+str(mu)+'step'+str(t)+'.txt'
+            f = open(fileMil,'w')
+            for i in range (N):
+                for j in range (N):
+                    f.write(str(MatAdj[i][j])+'\t')
+                f.write('\n')
+            f.close()
