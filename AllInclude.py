@@ -15,7 +15,7 @@ N = 256
 p = 0.15
 c = 0.5
 mu = 0.5
-Tmin = 2000000000
+Tmin = 10000000
 Nb = math.floor(c*N)#number of black 128
 G = nx.erdos_renyi_graph(N, p) 
 MatAdj = nx.to_numpy_matrix(G)#матрица смежности 256x256
@@ -133,7 +133,7 @@ while(t<Tmin):
                 f.write(str(MatAdj[i][j])+'\t')
             f.write('\n')
         f.close()
-        if(t%1000000)
+        if(t%1000000):
             fileMil = '2mu'+str(mu)+'step'+str(t)+'.txt'
             f = open(fileMil,'w')
             for i in range (N):
