@@ -133,3 +133,11 @@ while(t<Tmin):
                 f.write(str(MatAdj[i][j])+'\t')
             f.write('\n')
         f.close()
+        if(t%1000000)
+            fileMil = '2mu'+str(mu)+'step'+str(t)+'.txt'
+            f = open(fileMil,'w')
+            for i in range (N):
+                for j in range (N):
+                    f.write(str(MatAdj[i][j])+'\t')
+                f.write('\n')
+            f.close()
